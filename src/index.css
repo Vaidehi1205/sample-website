@@ -1,0 +1,29 @@
+.pnf {
+  display: flex;
+  min-height: 65vh;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.pnf-title h1 {
+  font-size: 100px;
+  font-weight: 700;
+}
+.pnf-title h2 {
+  font-size: 40px;
+  font-weight: 500;
+}
+.btnLink {
+  color: white;
+  text-decoration: none;
+  padding: 10px;
+  border: 1px solid #000;
+  background-color: black;
+  border-radius: 10px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -o-border-radius: 10px;
+  margin-top: 20px;
+}
+

@@ -1,0 +1,12 @@
+.pnf{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.pnf h1{
+    font-size :100px;
+    font-weight:700;
+
+}
