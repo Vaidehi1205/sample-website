@@ -1,16 +1,8 @@
 import React, { useState } from 'react'
-import {useNavigate} from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 function Login() {
-    const navigate=useNavigate()
-
-    const handleNavigate=()=>{
-        if(forms.email=="abc@gmail.com" && forms.password=="12345"){
-            navigate('/dashboard')
-        }else{
-            alert("Invalid Credentials")
-        }
-    }
+    const navigate = useNavigate()
 
     const [forms, setForms] = useState({
         email: "",
@@ -20,87 +12,111 @@ function Login() {
     const [error, setError] = useState({})
 
     const handleChange = (e) => {
-        const { name, value } = e.target;
-        setForms({ ...forms, [name]: value });
+        const { name, value } = e.target
+        setForms({ ...forms, [name]: value })
+
         if (error[name]) {
-            setError({ ...error, [name]: "" });
+            setError({ ...error, [name]: "" })
         }
     }
 
     const validate = () => {
-        let newErrors = {};
+        let newErrors = {}
+
         if (!forms.email.trim()) {
-            newErrors.email = "Email is required";
+            newErrors.email = "Email is required"
         }
+
         if (!forms.password.trim()) {
-            newErrors.password = "Password is required";
+            newErrors.password = "Password is required"
         }
-        return newErrors;
+
+        return newErrors
     }
 
     const handleSubmit = (e) => {
-        e.preventDefault();
-        const ValidateErrors = validate();
-        if (Object.keys(ValidateErrors).length > 0) {
-            setError(ValidateErrors);
+        e.preventDefault()
+
+        const validationErrors = validate()
+
+        if (Object.keys(validationErrors).length > 0) {
+            setError(validationErrors)
+            return
+        }
+
+        setError({})
+
+        // ✅ credential check
+        if (forms.email === "abc@gmail.com" && forms.password === "12345") {
+            navigate('/dashboard')
         } else {
-            setError({});
-            alert("Form Submited");
+            alert("Invalid Credentials")
         }
     }
 
     const handleClear = () => {
-        setForms({ email: "", password: "" });
-        setError({});
+        setForms({ email: "", password: "" })
+        setError({})
     }
 
-
-
     return (
-        <div>
-            <div className='container'>
-                <div className='row align-items-center'>
-                    <div className='col-md-6'>
-                        <img src="/img/login.jpg" className='img-fluid' />
-                    </div>
-                    <div className='col-md-6'>
-                        <h1>Login</h1>
-                        <form onSubmit={handleSubmit}><div className="mb-3">
-                            <label htmlFor="email" className="form-label">Email</label>
+        <div className="container">
+            <div className="row align-items-center">
+                <div className="col-md-6">
+                    <img src="/img/login.jpg" className="img-fluid" alt="login" />
+                </div>
+
+                <div className="col-md-6">
+                    <h1>Login</h1>
+
+                    <form onSubmit={handleSubmit}>
+                        <div className="mb-3">
+                            <label className="form-label">Email</label>
                             <input
                                 type="email"
-                                className={`form-control ${error.email ? "is-invalid" : ""}`}
-                                id="email"
                                 name="email"
+                                className={`form-control ${error.email ? "is-invalid" : ""}`}
                                 placeholder="Enter Email Address"
-                                autoComplete='off'
                                 value={forms.email}
                                 onChange={handleChange}
+                                autoComplete="off"
                             />
-                            {error.email && (<div className='invalid-feedback'>{error.email}</div>)}
+                            {error.email && (
+                                <div className="invalid-feedback">{error.email}</div>
+                            )}
                         </div>
-                            <div className="mb-3">
-                                <label htmlFor="password" className="form-label">Password</label>
-                                <input
-                                    type="password"
-                                    className={`form-control ${error.password ? "is-invalid" : ""}`}
-                                    id="password"
-                                    name="password"
-                                    placeholder="Enter your Password"
-                                    autoComplete='off'
-                                    value={forms.password}
-                                    onChange={handleChange}
-                                />
-                                {error.password && (<div className='invalid-feedback'>{error.password}</div>)}
-                            </div>
-                            <button type="submit" className="btn btn-success" onClick={handleNavigate}>Login</button>
-                            <button type="button" className="btn btn-secondary ms-2" onClick={handleClear}>Clear</button>
-                        </form>
-                    </div>
+
+                        <div className="mb-3">
+                            <label className="form-label">Password</label>
+                            <input
+                                type="password"
+                                name="password"
+                                className={`form-control ${error.password ? "is-invalid" : ""}`}
+                                placeholder="Enter your Password"
+                                value={forms.password}
+                                onChange={handleChange}
+                                autoComplete="off"
+                            />
+                            {error.password && (
+                                <div className="invalid-feedback">{error.password}</div>
+                            )}
+                        </div>
+
+                        <button type="submit" className="btn btn-success">
+                            Login
+                        </button>
+
+                        <button
+                            type="button"
+                            className="btn btn-secondary ms-2"
+                            onClick={handleClear}
+                        >
+                            Clear
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
-
     )
 }
 
