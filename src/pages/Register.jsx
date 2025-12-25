@@ -10,23 +10,29 @@ function Register() {
     });
 
     const [error, setError] = useState({});
+    const [successMessage, setSuccessMessage] = useState("");
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setForms({ ...forms, [name]: value });
+
+        // Clear the error for that field as user types
         if (error[name]) {
             setError({ ...error, [name]: "" });
         }
+
+        // Clear success message on any change
+        setSuccessMessage("");
     };
 
     const validate = () => {
         let newErrors = {};
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        const mobileRegex = /^[6-9]\d{9}$/; // Indian 10-digit number
+        const mobileRegex = /^[6-9]\d{9}$/;
 
         if (!forms.name.trim()) newErrors.name = "Name is required";
 
-        if (!forms.mobile.trim()) newErrors.mobile = "Mobile no. is required";
+        if (!forms.mobile.trim()) newErrors.mobile = "Mobile number is required";
         else if (!mobileRegex.test(forms.mobile))
             newErrors.mobile = "Enter a valid 10-digit mobile number";
 
@@ -38,7 +44,7 @@ function Register() {
         else if (forms.password.length < 6)
             newErrors.password = "Password must be at least 6 characters";
 
-        if (!forms.cpassword.trim()) newErrors.cpassword = "Please confirm password";
+        if (!forms.cpassword.trim()) newErrors.cpassword = "Please confirm your password";
         else if (forms.password !== forms.cpassword)
             newErrors.cpassword = "Passwords do not match";
 
@@ -47,12 +53,13 @@ function Register() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const validateErrors = validate();
-        if (Object.keys(validateErrors).length > 0) {
-            setError(validateErrors);
+        const validationErrors = validate();
+        if (Object.keys(validationErrors).length > 0) {
+            setError(validationErrors);
+            setSuccessMessage("");
         } else {
             setError({});
-            alert("✅ Form Submitted Successfully!");
+            setSuccessMessage("✅ Form Submitted Successfully!");
             console.log("User Data:", forms);
         }
     };
@@ -60,38 +67,75 @@ function Register() {
     const handleClear = () => {
         setForms({ name: "", mobile: "", email: "", password: "", cpassword: "" });
         setError({});
+        setSuccessMessage("");
+    };
+
+    // Helper function to determine input type
+    const getInputType = (field) => {
+        if (field.includes("password")) return "password";
+        if (field === "email") return "email";
+        if (field === "mobile") return "tel";
+        return "text";
     };
 
     return (
-        <div className="container">
+        <div className="container mt-4">
             <div className="row align-items-center">
                 <div className="col-md-6">
                     <img src="/img/register.jpg" className="img-fluid" alt="Register" />
                 </div>
                 <div className="col-md-6">
-                    <h1>Register</h1>
-                    <form onSubmit={handleSubmit}>
-                        {["name","mobile","email","password","cpassword"].map((field, i) => (
+                    <h1 className="mb-4">Register</h1>
+
+                    {/* Success Message */}
+                    {successMessage && (
+                        <div className="alert alert-success" role="alert">
+                            {successMessage}
+                        </div>
+                    )}
+
+                    <form onSubmit={handleSubmit} noValidate>
+                        {["name", "mobile", "email", "password", "cpassword"].map((field, i) => (
                             <div className="mb-3" key={i}>
                                 <label htmlFor={field} className="form-label">
                                     {field === "cpassword" ? "Confirm Password" : field.charAt(0).toUpperCase() + field.slice(1)}
                                 </label>
                                 <input
-                                    type={field.includes("password") ? "password" : field === "email" ? "email" : "text"}
+                                    type={getInputType(field)}
                                     className={`form-control ${error[field] ? "is-invalid" : ""}`}
                                     id={field}
                                     name={field}
-                                    placeholder={`Enter ${field}`}
-                                    autoComplete="off"
+                                    placeholder={
+                                        field === "cpassword"
+                                            ? "Confirm your password"
+                                            : `Enter your ${field}`
+                                    }
+                                    autoComplete={field.includes("password") ? "new-password" : "off"}
                                     value={forms[field]}
                                     onChange={handleChange}
+                                    inputMode={field === "mobile" ? "numeric" : undefined}
+                                    maxLength={field === "mobile" ? 10 : undefined}
+                                    pattern={field === "mobile" ? "[6-9][0-9]{9}" : undefined}
+                                    aria-describedby={error[field] ? `${field}-error` : undefined}
                                 />
-                                {error[field] && <div className="invalid-feedback">{error[field]}</div>}
+                                {error[field] && (
+                                    <div id={`${field}-error`} className="invalid-feedback">
+                                        {error[field]}
+                                    </div>
+                                )}
                             </div>
                         ))}
 
-                        <button type="submit" className="btn btn-success">Register</button>
-                        <button type="button" className="btn btn-secondary ms-2" onClick={handleClear}>Clear</button>
+                        <button type="submit" className="btn btn-success">
+                            Register
+                        </button>
+                        <button
+                            type="button"
+                            className="btn btn-secondary ms-2"
+                            onClick={handleClear}
+                        >
+                            Clear
+                        </button>
                     </form>
                 </div>
             </div>

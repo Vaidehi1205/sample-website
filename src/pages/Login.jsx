@@ -1,6 +1,17 @@
 import React, { useState } from 'react'
+import {useNavigate} from 'react-router-dom'
 
 function Login() {
+    const navigate=useNavigate()
+
+    const handleNavigate=()=>{
+        if(forms.email=="abc@gmail.com" && forms.password=="12345"){
+            navigate('/dashboard')
+        }else{
+            alert("Invalid Credentials")
+        }
+    }
+
     const [forms, setForms] = useState({
         email: "",
         password: "",
@@ -82,8 +93,8 @@ function Login() {
                                 />
                                 {error.password && (<div className='invalid-feedback'>{error.password}</div>)}
                             </div>
-                            <button type="submit" class="btn btn-success">Login</button>
-                            <button type="button" class="btn btn-secondary ms-2" onClick={handleClear}>Clear</button>
+                            <button type="submit" className="btn btn-success" onClick={handleNavigate}>Login</button>
+                            <button type="button" className="btn btn-secondary ms-2" onClick={handleClear}>Clear</button>
                         </form>
                     </div>
                 </div>

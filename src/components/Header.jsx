@@ -36,7 +36,7 @@ function Header() {
                 </li>
             </ul>
             <form className="d-flex flex-column flex-lg-row mt-2 mt-lg-0" role="search">
-                <button className="btn btn-outline-primary  mt-2 me-2" type="submit" on onClick={handleLogin}>Login</button>
+                <button className="btn btn-outline-primary  mt-2 me-2" type="submit"  onClick={handleLogin}>Login</button>
                 <button className="btn btn-outline-success mt-2 mt-lg-2" type="submit" onClick={handleRegister}>Register</button>
             </form>
             </div>
